@@ -1,0 +1,100 @@
+require "main.game.game"
+require "main.mcts.mcts"
+
+local MINIMUM_SIZE = 4
+local MINIMUM_COMPUTATION_TIME = 2
+
+function init(self)
+	self.game = nil
+	self.required = MINIMUM_SIZE
+	self.grid_size = MINIMUM_SIZE
+	self.computation_time = MINIMUM_COMPUTATION_TIME
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("click") and action.pressed and not self.game:is_end() then	
+		human_turn(self, action)
+		computer_turn(self)
+
+		if self.game:is_end() then
+			msg.post("/over", "set_winner", {winner = self.game.winner})
+		end
+	end
+
+	return true
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("play") then
+		local field_size = message.width / self.grid_size
+		
+		self.game = Game:create(nil, self.grid_size, field_size, self.required)
+		self.game.grid:paint()
+		
+		msg.post(".", "acquire_input_focus")
+	end
+
+	if message_id == hash("increase_size") then
+		self.grid_size = self.grid_size + 1
+	end
+
+	if message_id == hash("decrease_size") then
+		if self.grid_size > MINIMUM_SIZE then
+			self.grid_size = self.grid_size - 1
+		end
+	end
+
+	if message_id == hash("increase_required") then
+		if self.required < self.grid_size then
+			self.required = self.required + 1
+		end
+	end
+
+	if message_id == hash("decrease_required") then
+		if self.required > MINIMUM_SIZE then
+			self.required = self.required - 1
+		end
+	end
+
+	if message_id == hash("increase_computation_time") then
+		self.computation_time = self.computation_time + 1
+	end
+
+	if message_id == hash("decrease_computation_time") then
+		if self.computation_time > MINIMUM_COMPUTATION_TIME then
+			self.computation_time = self.computation_time - 1
+		end
+	end
+
+	msg.post("/menu", "update_grid_size", {grid_size = self.grid_size})
+	msg.post("/menu", "update_required_count", {required_count = self.required})
+	msg.post("/menu", "update_computation_time", {computation_time = self.computation_time})
+end
+
+function human_turn(self, action)
+	if self.game.last_turn == "human" or self.game:is_end() then
+		return
+	end
+	
+	local coord = self.game.grid:get_coords(action)
+	
+	if not self.game:put_mark(coord, "human") then
+		-- Invalid position for mark, try again
+		return false
+	end
+
+	return true
+end
+
+function computer_turn(self)
+	if self.game.last_turn == "computer" or self.game:is_end() then
+		return
+	end
+	
+	local mcts = MCTS:create(self.game, self.computation_time)
+	
+	local coord = mcts:get_action()
+	self.game:put_mark(coord, "computer")
+
+	return true
+end

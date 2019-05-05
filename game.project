@@ -1,0 +1,19 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+render = /builtins/render/default.renderc
+
+[script]
+shared_state = 1
+
+[display]
+width = 500
+height = 500
+
+[project]
+title = TicTacToe
+dependencies = 
+write_log = 0
+
+[physics]
+gravity_y = 0.0
+

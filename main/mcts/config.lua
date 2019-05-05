@@ -1,0 +1,10 @@
+config = {
+	TREE_DEPTH_LIMIT = math.huge,
+
+	UCTK_CONSTANT = 600,
+
+	POSITIVE_REWARD = 1,
+	NEGATIVE_REWARD = -1000,
+	NEUTRAL_REWARD = -500,
+}
+
