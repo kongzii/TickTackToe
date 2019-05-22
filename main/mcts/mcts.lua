@@ -4,12 +4,18 @@ require "main.mcts.node"
 MCTS = {}
 MCTS.__index = MCTS
 
-function MCTS:create(game, time_limit_seconds)
+function MCTS:create(root, game, time_limit_seconds)
 	local mcts = {}
 	setmetatable(mcts, MCTS)
-	
+
 	mcts.start_time = os.time()
-	mcts.root = Node:create(game)
+
+	if root == nil then
+		mcts.root = Node:create(game)
+	else
+		mcts.root = root
+		mcts.root.depth = 0
+	end
 
 	mcts.time_limit_seconds = time_limit_seconds
 	
@@ -58,7 +64,6 @@ function MCTS:get_action()
 		end
 	end
 
-	-- self.root:print(1)
 	return self.root:get_max_q_coord("computer")
 end
 

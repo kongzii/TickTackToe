@@ -2,10 +2,11 @@ require "main.game.game"
 require "main.mcts.mcts"
 
 local MINIMUM_SIZE = 4
-local MINIMUM_COMPUTATION_TIME = 2
+local MINIMUM_COMPUTATION_TIME = 1
 
 function init(self)
 	self.game = nil
+	self.mcts = nil
 	self.required = MINIMUM_SIZE
 	self.grid_size = MINIMUM_SIZE
 	self.computation_time = MINIMUM_COMPUTATION_TIME
@@ -90,11 +91,25 @@ function computer_turn(self)
 	if self.game.last_turn == "computer" or self.game:is_end() then
 		return
 	end
-	
-	local mcts = MCTS:create(self.game, self.computation_time)
-	
-	local coord = mcts:get_action()
-	self.game:put_mark(coord, "computer")
 
+	local root = nil
+
+	if self.mcts ~= nil then
+		local last_mark = self.game.last_mark
+		
+		for index, child in pairs(self.mcts.root:get_max_q_child("computer").children) do
+			if child.game.grid[last_mark.x][last_mark.y] == "human" then
+				root = child
+				break
+			end
+		end
+	end
+	
+	self.mcts = MCTS:create(root, self.game, self.computation_time)
+	
+	local coord = self.mcts:get_action()
+
+	self.game:put_mark(coord, "computer")
+	
 	return true
 end

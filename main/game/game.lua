@@ -20,6 +20,7 @@ function Game:create(last_turn, size, field_size, required_to_win)
 	game.winner = nil
 	game.simulation = false
 	game.moves_left = size * size
+	game.last_mark = nil
 	
 	return game
 end
@@ -101,6 +102,7 @@ function Game:put_mark(coord, turn)
 			factory.create(component, centered_position)
 		end
 
+		self.last_mark = coord
 		self.last_turn = turn
 		self:check_winner(coord, turn)
 		self:check_tie()

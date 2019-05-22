@@ -1243,7 +1243,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "2 seconds\n"
+  text: "1 seconds\n"
   ""
   font: "system_font"
   id: "computation_time"

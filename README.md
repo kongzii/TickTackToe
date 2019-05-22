@@ -14,4 +14,3 @@ In `main/mcts/config.lua` we can play with the parameters, especially UCTK and R
 
 This is my first project with [Defold](https://www.defold.com/) and even in [LUA](https://www.lua.org/) language, but it demonstrate MCTS quite good. A lot of things could be optimized and then MCTS would be capable of computing better strategies in given time.
 
-In this implementation, MCTS computes possible outcomes after each action, without storing of previously learned ones, what is very inefficient and unnecessary. If memory for generated trees would be introduced, decisions from computer could be a lot faster.
