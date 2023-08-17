@@ -1,6 +1,6 @@
 # Tic-Tac-Toe with MCTS opponent
 
-Playable at [http://jung.ninja/TicTacToe/](http://jung.ninja/TicTacToe/). Simple game made with [Defold](https://www.defold.com/). Computation time represents time given for computer to make a decision.
+Playable at [http://jung.ninja/game/](http://jung.ninja/game/). Simple game made with [Defold](https://www.defold.com/). Computation time represents time given for computer to make a decision.
 
 ## Monte Carlo Tree Search
 
